@@ -1,0 +1,37 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+#include <stdlib.h>
+#include <string.h>
+
+void generate(char **result, int *returnSize, char *str, int pos, int open, int close, int n) {
+    if (pos == 2 * n) {
+        str[pos] = '\0';
+        result[*returnSize] = (char *)malloc((2 * n + 1) * sizeof(char));
+        strcpy(result[*returnSize], str);
+        (*returnSize)++;
+        return;
+    }
+
+    if (open < n) {
+        str[pos] = '(';
+        generate(result, returnSize, str, pos + 1, open + 1, close, n);
+    }
+
+    if (close < open) {
+        str[pos] = ')';
+        generate(result, returnSize, str, pos + 1, open, close + 1, n);
+    }
+}
+
+char **generateParenthesis(int n, int *returnSize) {
+    char **result = (char **)malloc(1500 * sizeof(char *)); // Enough for n <= 8
+    char *str = (char *)malloc((2 * n + 1) * sizeof(char));
+
+    *returnSize = 0;
+    generate(result, returnSize, str, 0, 0, 0, n);
+
+    free(str);
+    return result;
+}
