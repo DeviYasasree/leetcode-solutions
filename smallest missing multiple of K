@@ -1,0 +1,15 @@
+#include <stdbool.h>
+
+int missingMultiple(int* nums, int numsSize, int k) {
+    bool present[101] = {false};
+
+    for (int i = 0; i < numsSize; i++) {
+        present[nums[i]] = true;
+    }
+
+    for (int multiple = k; ; multiple += k) {
+        if (multiple > 100 || !present[multiple]) {
+            return multiple;
+        }
+    }
+}
