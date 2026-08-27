@@ -1,0 +1,69 @@
+class Solution {
+    public String generateString(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+        int len = n + m - 1;
+
+        char[] ans = new char[len];
+        boolean[] fixed = new boolean[len];
+
+        for (int i = 0; i < len; i++) ans[i] = '?';
+
+        // Apply all T constraints
+        for (int i = 0; i < n; i++) {
+            if (str1.charAt(i) == 'T') {
+                for (int j = 0; j < m; j++) {
+                    char c = str2.charAt(j);
+                    int pos = i + j;
+
+                    if (ans[pos] == '?') {
+                        ans[pos] = c;
+                    } else if (ans[pos] != c) {
+                        return "";
+                    }
+                    fixed[pos] = true;
+                }
+            }
+        }
+
+        // Fill remaining with 'a'
+        for (int i = 0; i < len; i++) {
+            if (ans[i] == '?') ans[i] = 'a';
+        }
+
+        // Process F constraints
+        for (int i = 0; i < n; i++) {
+            if (str1.charAt(i) == 'F') {
+
+                boolean equal = true;
+                for (int j = 0; j < m; j++) {
+                    if (ans[i + j] != str2.charAt(j)) {
+                        equal = false;
+                        break;
+                    }
+                }
+
+                if (!equal) continue;
+
+                boolean changed = false;
+
+                // Change the rightmost non-fixed position
+                for (int j = m - 1; j >= 0; j--) {
+                    int pos = i + j;
+                    if (!fixed[pos]) {
+                        if (ans[pos] == 'a')
+                            ans[pos] = 'b';
+                        else
+                            ans[pos] = 'a';
+                        changed = true;
+                        break;
+                    }
+                }
+
+                if (!changed) return "";
+            }
+        }
+
+        return new String(ans);
+    }
+}
